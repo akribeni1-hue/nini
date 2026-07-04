@@ -1,0 +1,202 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devine qui c'est...</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgb(0, 247, 255);
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            
+        }
+
+        h2 {
+            color: #9f4ba2;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        p {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .game-box {
+            display: block;
+        }
+
+        .game-box.hidden, .win-box.hidden {
+            display: none;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 20px;
+            margin-bottom: 15px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            outline: none;
+            transition: border-color 0.3s;
+            text-align: center;
+            color: rgb(213, 47, 255);
+            font-size: large;
+            font-weight: 900;
+            background-color: wheat;
+        }
+
+        input[type="text"]:focus {
+            border-color: #4b78a2;
+            background-color: white;
+        }
+
+        button {
+            background-color: rgb(171, 130, 238);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: transform 0.3s, box-shadow 0.3s;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgb(78, 47, 255);
+            color: rgb(171, 130, 238);
+            background-color: #fff;
+            font-size: large;
+            font-weight: bold;
+            
+
+        }
+
+        .feedback {
+            margin-top: 15px;
+            font-size: 15px;
+            font-weight: 500;
+            min-height: 22px;
+        }
+
+        .error { color: #ff4d4d; }
+        .neutral { color: #888; }
+
+        /* Style de la victoire */
+        .win-box {
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .reveal-card {
+            background: #f7f5fb;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px dashed #764ba2;
+            margin: 20px 0;
+        }
+
+        .phone-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            letter-spacing: 2px;
+            margin-top: 10px;
+            background: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="game-box" id="gameBox">
+        <h2>Devine qui je suis ! </h2>
+        <p>J'ai changé de numéro ! Entoure-toi de tes meilleurs souvenirs et tape le prénom de la personne à qui tu penses...</p>
+        
+        <p>Ceux que tu connaisse et qui sont capable de creer une page web et avec qui t'as  discuté recement</p>
+        <input type="text" id="nameInput" placeholder="Entre un prénom..." onkeydown="if(event.key === 'Enter') checkName()">
+        <button onclick="checkName()">Deviner</button>
+        
+        <div class="feedback neutral" id="feedbackMsg"></div>
+    </div>
+
+    <div class="win-box hidden" id="winBox">
+        <h2>Gagné xai well </h2>
+        <p>Tu as tapé le bon prénom ! Tu as capté direct que c'était moi.</p>
+        
+        <div class="reveal-card">
+            <p style="margin-top: 10px;">Voici mon nouveau numéro , enregistre-le :</p>
+            <h3 style="color: #764ba2; font-size: 22px;">Bingo bien trouvé xai  bien mw  Joanita </h3>
+            <div class="phone-number">+228 98285664</div>
+        </div>
+        
+        <p style="font-size: 14px; color: #666;">Envoie-moi un message sur WhatsApp maintenant que tu as trouvé la go </p>
+    </div>
+
+</div>
+
+<script>
+    const wrongAnswersReplies = [
+        "Non, c'est pas lui ! Essaye encore... 😜",
+        "Ah non, mauvaise pioche ! ❌",
+        "Sérieux ? Tu penses à lui en premier ? Réessaie ! 😂",
+        "Toujours pas ! Cherche encore un peu... 👀",
+        "Oublie-le, c'est pas lui. Allez, un autre prénom ! 🤔"
+    ];
+
+    function checkName() {
+        // .normalize("NFD") permet de retirer les accents (béni devient beni)
+        const userInput = document.getElementById('nameInput').value.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const feedback = document.getElementById('feedbackMsg');
+        
+       // On ne cache 'gameBox' QUE si la réponse est la bonne
+if (userInput === "joanita") { // "beni" en minuscules et sans accent !
+    document.getElementById('gameBox').classList.add('hidden');
+    document.getElementById('winBox').classList.remove('hidden');
+} else {
+    // Si c'est faux, on choisit une réponse aléatoire
+    const randomReply = wrongAnswersReplies[Math.floor(Math.random() * wrongAnswersReplies.length)];
+    feedback.className = "feedback error";
+    feedback.innerText = randomReply;
+    
+    // Optionnel : vider le champ pour que l'utilisateur puisse rejouer facilement
+    document.getElementById('nameInput').value = "";
+}
+    }
+</script>
+
+</body>
+</html>
